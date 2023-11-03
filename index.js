@@ -5,17 +5,20 @@ const fs = require('fs');
 
 const configMapName = 'vaultrole';
 const namespace = 'dev'; // Replace with your ConfigMap's namespace
+const https = require('https');
 
-
-
-
+const agent = new https.Agent({
+    ca: fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/ca.crt')
+});
+  
 
 const fetchConfigMap = async () => {
     try {
         const token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
         const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps/${configMapName}`;
-
+        console.log(token);
         const response = await axios({
+            httpsAgent: agent,
             method: 'get',
             url: api,
             headers: {
@@ -37,6 +40,7 @@ const updateConfigMap = async (configMapData) => {
         const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps/${configMapName}`;
 
         await axios({
+            httpsAgent: agent,
             method: 'put',
             url: api,
             headers: {

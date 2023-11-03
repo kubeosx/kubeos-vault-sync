@@ -1,0 +1,7 @@
+site_name: "kubeos-vault-sync Docs"
+
+nav:
+  - Home: index.md
+
+plugins:
+  - techdocs-core

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeos-vault-sync
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubeos-vault-sync
+  template:
+    metadata:
+      annotations:
+        backstage.io/kubernetes-id: "kubeos-vault-sync"
+    spec:
+      containers:
+        - name: my-kubeos-vault-sync
+          image: rohitrustagi007/kubeos-vault-sync:1
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 500Mi

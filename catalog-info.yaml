@@ -1,0 +1,24 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "kubeos-vault-sync"
+  annotations:
+    github.com/project-slug: kubeosx/kubeos-vault-sync
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: "kubeos-vault-sync"
+    backstage.io/kubernetes-namespace: "dev"
+  tags:
+    - nodejs
+    - webapi
+  links:
+    - url: https://github.com/kubeosx/kubeos-vault-sync
+      icon: web
+      title: Github
+    - url: https://github.com/kubeosx/kubeos-vault-sync/issues
+      icon: web
+      title: Github Issues
+spec:
+  type: service
+  lifecycle: experimental
+  owner: "group:default/platform-engineering-team"
+  system:  "system:default/kubeos-idp"

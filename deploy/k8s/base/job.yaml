@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: kubeos-vault-sync
+  namespace: vault-backend
 spec:
   # completions: 2
   # parallelism: 1
@@ -11,6 +12,11 @@ spec:
   template:
     spec:
       restartPolicy: Never # required for the feature
+      serviceAccountName: kubeos-vault-sync
       containers:
       - name: kubeos-vault-sync
-        image:  rohitrustagi007/kubeos-vault-sync:4
+        image:  rohitrustagi007/kubeos-vault-sync:5
+        env:
+          name: NAMESPACE
+          value: vault-backend
+        

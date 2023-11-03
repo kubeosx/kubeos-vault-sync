@@ -5,4 +5,12 @@ metadata:
   namespace: vault-backend
 data:
   key: |
-    { "default" : "test" }
+    [
+      {
+        "name": "test",
+        "policies": [
+          "test"
+        ],
+        "ttl": "1h"
+      }
+    ]

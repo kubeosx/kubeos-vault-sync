@@ -3,6 +3,9 @@ kind: Job
 metadata:
   name: kubeos-vault-sync
   namespace: vault-backend
+  annotations:
+    vault.hashicorp.com/agent-inject: 'true'
+    vault.hashicorp.com/agent-configmap: 'vault-sync-int-config'
 spec:
   # completions: 2
   # parallelism: 1
@@ -15,8 +18,10 @@ spec:
       serviceAccountName: kubeos-vault-sync
       containers:
       - name: kubeos-vault-sync
-        image:  rohitrustagi007/kubeos-vault-sync:5
+        image:  rohitrustagi007/kubeos-vault-sync:6
         env:
-          name: NAMESPACE
+        - name: NAMESPACE
           value: vault-backend
+        - name: CM_NAME
+          value: vaultrole
         

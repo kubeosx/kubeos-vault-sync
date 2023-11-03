@@ -3,14 +3,14 @@ kind: Job
 metadata:
   name: kubeos-vault-sync
 spec:
-  completions: 2
-  parallelism: 1
-  completionMode: Indexed  # required for the feature
-  backoffLimitPerIndex: 1  # maximal number of failures per index
-  maxFailedIndexes: 5      # maximal number of failed indexes before terminating the Job execution
+  # completions: 2
+  # parallelism: 1
+  # completionMode: Indexed  # required for the feature
+  # backoffLimitPerIndex: 1  # maximal number of failures per index
+  # maxFailedIndexes: 5      # maximal number of failed indexes before terminating the Job execution
   template:
     spec:
       restartPolicy: Never # required for the feature
       containers:
       - name: kubeos-vault-sync
-        image:  rohitrustagi007/kubeos-vault-sync:1
+        image:  rohitrustagi007/kubeos-vault-sync:4

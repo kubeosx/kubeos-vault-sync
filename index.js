@@ -1,12 +1,8 @@
 const configMapName = 'vaultrole';
 const namespace = 'dev'; // Replace with your ConfigMap's namespace
 
-for (let index = 0; index < 10; index++) {
-    console.log('Hello, this is kubeos-vault-sync created by my developer portal!');  
-    fetchConfigMap();
-}
 
-console.log("Ending Job Successfull");
+
 
 
 const fetchConfigMap = async () => {
@@ -50,3 +46,12 @@ const updateConfigMap = async (configMapData) => {
         console.error('Error updating ConfigMap:', error);
     }
 };
+console.log("Started Job Successfull");
+
+for (let index = 0; index < 10; index++) {
+    console.log('Hello, this is kubeos-vault-sync created by my developer portal!');  
+    fetchConfigMap();
+}
+
+
+console.log("Ending Job Successfull");

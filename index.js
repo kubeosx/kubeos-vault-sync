@@ -144,8 +144,8 @@ const VaultRolePolicySyncronizer = async () => {
     var all_config_maps_filtered = await fetchFilteredConfigMap();
     console.log(all_config_maps_filtered);
     all_config_maps_filtered.forEach(async (cm) => {
-        await SyncVaultPolicy(cm.app)
-        await SyncVaultRole(cm.app)
+        await SyncVaultPolicy(cm.data.app)
+        await SyncVaultRole(cm.data.app)
     });
     
     return true;

@@ -6,11 +6,5 @@ metadata:
 data:
   key: |
     [
-      {
-        "name": "test",
-        "policies": [
-          "test"
-        ],
-        "ttl": "1h"
-      }
+      "four-api"
     ]

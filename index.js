@@ -18,12 +18,12 @@ const agent = new https.Agent({
 });
 
 
-const fetchConfigMap = async () => {
+const fetchConfigMap = () => {
     try {
         const token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
         const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps/${configMapName}`;
         console.log(token);
-        const response = await axios({
+        const response = axios({
             httpsAgent: agent,
             method: 'get',
             url: api,
@@ -43,12 +43,12 @@ const fetchConfigMap = async () => {
     }
 };
 
-const updateConfigMap = async (configMapData) => {
+const updateConfigMap = (configMapData) => {
     try {
         const token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
         const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps/${configMapName}`;
 
-        await axios({
+         axios({
             httpsAgent: agent,
             method: 'put',
             url: api,
@@ -117,7 +117,7 @@ function OnboardAppToVault(appname) {
 
 for (let index = 0; index < 10; index++) {
     console.log('Hello, this is kubeos-vault-sync created by my developer portal!');
-    var cmData = await fetchConfigMap();
+    var cmData = fetchConfigMap();
     console.log(cmData.key);
     let apps = JSON.parse(cmData.key);
     console.log(apps);

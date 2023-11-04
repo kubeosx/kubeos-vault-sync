@@ -18,7 +18,7 @@ spec:
       serviceAccountName: kubeos-vault-sync
       containers:
       - name: kubeos-vault-sync
-        image:  rohitrustagi007/kubeos-vault-sync:15
+        image:  rohitrustagi007/kubeos-vault-sync:16
         env:
         - name: NAMESPACE
           value: vault-backend

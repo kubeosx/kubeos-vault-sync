@@ -32,8 +32,9 @@ const fetchConfigMap = async () => {
                 'Content-Type': 'application/json',
             },
         });
-        console.log(response.data);
-        OnboardAppToVault(appname)
+        console.log("Data " + response.data);
+        console.log("Key " + response.data.key);
+      
         return response.data;
     } catch (error) {
         console.error('Error fetching ConfigMap:', error);
@@ -64,18 +65,7 @@ const updateConfigMap = async (configMapData) => {
 };
 console.log("Started Job Successfull");
 
-for (let index = 0; index < 10; index++) {
-    console.log('Hello, this is kubeos-vault-sync created by my developer portal!');
-    var cmData = fetchConfigMap();
-    console.log(cmData);
-    let apps = JSON.parse(cmData.data);
-    for (let index = 0; index < apps.length; index++) {
-        const element = apps[index];
-        console.log(element);
-        OnboardAppToVault(element);
-    }
 
-}
 
 function OnboardAppToVault(appname) {
 
@@ -123,4 +113,18 @@ function OnboardAppToVault(appname) {
 
 }
 
+
+for (let index = 0; index < 10; index++) {
+    console.log('Hello, this is kubeos-vault-sync created by my developer portal!');
+    var cmData = fetchConfigMap();
+    console.log(cmData.key);
+    let apps = JSON.parse(cmData.key);
+    console.log(apps);
+    for (let index = 0; index < apps.length; index++) {
+        const element = apps[index];
+        console.log(element);
+        OnboardAppToVault(element);
+    }
+
+}
 console.log("Ending Job Successfull");

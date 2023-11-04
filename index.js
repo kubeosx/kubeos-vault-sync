@@ -28,7 +28,7 @@ console.log(token);
 
 const fetchConfigMap = () => {
     try {
-        axios.get(api, policy_payload, http_k8_config)
+        axios.get(api, {}, http_k8_config)
             .then(response => {
                 console.log('Policy created:', response.data);
                 console.log("Call Done");

@@ -1,9 +1,9 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: four-api-vault-config
+  name: five-api-vault-config
   namespace: vault-backend
   labels:
     kubeos.io/vault-cm: vault-config
 data:
-  app: "four-api"
+  app: "five-api"

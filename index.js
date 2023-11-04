@@ -143,10 +143,8 @@ const OnboardAppToVault = async () => {
 const VaultRolePolicySyncronizer = async () => {
     var all_config_maps_filtered = await fetchFilteredConfigMap();
     console.log(all_config_maps_filtered);
-    var allCM = JSON.parse(all_config_maps_filtered);
-    allCM.forEach(async (cm) => {
+    all_config_maps_filtered.forEach(async (cm) => {
         await SyncVaultPolicy(cm.app)
-
         await SyncVaultRole(cm.app)
     });
     

@@ -21,10 +21,10 @@ spec:
           serviceAccountName: kubeos-vault-sync
           containers:
           - name: kubeos-vault-sync
-            image:  rohitrustagi007/kubeos-vault-sync:22
+            image:  rohitrustagi007/kubeos-vault-sync:23
             env:
             - name: NAMESPACE
-              value: vault-backend
+              value: dev
             - name: CM_NAME
               value: vaultrole
             - name: VAULT_TOKEN

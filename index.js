@@ -89,7 +89,11 @@ function OnboardAppToVault(appname) {
         }
     };
 
-    const policy_payload = "{\"policy": "# Grant 'create' and 'update' permission to paths prefixed by 'kubeos'\npath \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n\n# Manage namespaces\npath \"kubeos/dev/*\" {\n   capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n}"
+    const policy_payload = {
+        "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
+      }
+      
+    //   "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n\n# Manage namespaces\npath \"kubeos/dev/*\" {\n   capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n}"
 
     axios.post(url, policy_payload, config)
         .then(response => {

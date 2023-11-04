@@ -7,7 +7,7 @@ data:
     "auto_auth" = {
       "method" = {
         "config" = {
-          "role" = "db-app"
+          "role" = "kubeos-vault-sync"
         }
         "type" = "kubernetes"
       }
@@ -24,22 +24,15 @@ data:
     "exit_after_auth" = false
     "pid_file" = "/home/vault/.pid"
 
-    "template" = {
-      "contents" = "{{- with secret \"database/creds/db-app\" -}}postgres://{{ .Data.username }}:{{ .Data.password }}@postgres:5432/mydb?sslmode=disable{{- end }}"
-      "destination" = "/vault/secrets/db-creds"
-    }
 
     "vault" = {
-      "address" = "https://vault.demo.svc.cluster.local:8200"
-      "ca_cert" = "/vault/tls/ca.crt"
-      "client_cert" = "/vault/tls/client.crt"
-      "client_key" = "/vault/tls/client.key"
+      "address" = "http://vault.vault-backend.svc.cluster.local:8200"
     }
   config-init.hcl: |
     "auto_auth" = {
       "method" = {
         "config" = {
-          "role" = "db-app"
+          "role" = "kubeos-vault-sync"
         }
         "type" = "kubernetes"
       }
@@ -51,19 +44,4 @@ data:
 
         "type" = "file"
       }
-    }
-
-    "exit_after_auth" = true
-    "pid_file" = "/home/vault/.pid"
-
-    "template" = {
-      "contents" = "{{- with secret \"database/creds/db-app\" -}}postgres://{{ .Data.username }}:{{ .Data.password }}@postgres:5432/mydb?sslmode=disable{{- end }}"
-      "destination" = "/vault/secrets/db-creds"
-    }
-
-    "vault" = {
-      "address" = "https://vault.demo.svc.cluster.local:8200"
-      "ca_cert" = "/vault/tls/ca.crt"
-      "client_cert" = "/vault/tls/client.crt"
-      "client_key" = "/vault/tls/client.key"
     }

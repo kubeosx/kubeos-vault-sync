@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const fs = require('fs');
-
+const https = require('https');
 
 const configMapName = process.env.CM_NAME;
 const namespace = process.env.NAMESPACE; // Replace with your ConfigMap's namespace
@@ -10,33 +10,36 @@ const VAULT_TOKEN = process.env.VAULT_TOKEN; // Replace with your Vault token
 const VAULT_ADDR = process.env.VAULT_ADDR;; // Replace with your Vault address
 
 
-
-const https = require('https');
-
 const agent = new https.Agent({
     ca: fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/ca.crt')
 });
 
+const token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
+const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps/${configMapName}`;
+
+const http_k8_config = {
+    headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    },
+    httpsAgent: agent
+}
+console.log(token);
 
 const fetchConfigMap = () => {
     try {
-        const token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
-        const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps/${configMapName}`;
-        console.log(token);
-        const response = axios({
-            httpsAgent: agent,
-            method: 'get',
-            url: api,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log("Call Done");
-        console.log("Data " + response.data);
-        console.log("Key " + response.data.key);
-      
-        return response.data;
+        axios.get(api, policy_payload, http_k8_config)
+            .then(response => {
+                console.log('Policy created:', response.data);
+                console.log("Call Done");
+                console.log("Data ", response.data);
+                console.log("Key ", response.data.key);
+                return response.data;
+            })
+            .catch(error => {
+                console.error('Error creating policy:', error.response.data);
+                return null;
+            });
     } catch (error) {
         console.error('Error fetching ConfigMap:', error);
         return null;
@@ -48,7 +51,7 @@ const updateConfigMap = (configMapData) => {
         const token = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf8');
         const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps/${configMapName}`;
 
-         axios({
+        axios({
             httpsAgent: agent,
             method: 'put',
             url: api,
@@ -64,8 +67,6 @@ const updateConfigMap = (configMapData) => {
         console.error('Error updating ConfigMap:', error);
     }
 };
-console.log("Started Job Successfull");
-
 
 
 function OnboardAppToVault(appname) {
@@ -82,8 +83,8 @@ function OnboardAppToVault(appname) {
 
     const policy_payload = {
         "policy": "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
-      }
-      
+    }
+
     //   "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n\n# Manage namespaces\npath \"kubeos/dev/*\" {\n   capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n}"
 
     axios.post(url, policy_payload, config)

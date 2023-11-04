@@ -32,6 +32,7 @@ const fetchConfigMap = async () => {
                 'Content-Type': 'application/json',
             },
         });
+        console.log("Call Done");
         console.log("Data " + response.data);
         console.log("Key " + response.data.key);
       
@@ -116,7 +117,7 @@ function OnboardAppToVault(appname) {
 
 for (let index = 0; index < 10; index++) {
     console.log('Hello, this is kubeos-vault-sync created by my developer portal!');
-    var cmData = fetchConfigMap();
+    var cmData = await fetchConfigMap();
     console.log(cmData.key);
     let apps = JSON.parse(cmData.key);
     console.log(apps);

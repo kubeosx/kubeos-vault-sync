@@ -62,34 +62,28 @@ const updateConfigMap = async (configMapData) => {
 
 const SyncVaultPolicy = async (appname) => {
     const policyurl = `${VAULT_ADDR}/v1/sys/policy/${appname}`;
-    const vault_config = {
+    const policy_payload = {
+        "policy": "path \"kubeos/dev/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
+    }
+
+    const response = await axios({
+        method: 'post',
+        url: policyurl,
         headers: {
             'X-Vault-Token': VAULT_TOKEN,
             'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
             'Content-Type': 'application/json',
-        }
-    };
-    const policy_payload = {
-        "policy": "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
-    }
-    axios.post(policyurl, policy_payload, vault_config)
-        .then(response => {
-            console.log('Policy created:', response.data);
-        })
-        .catch(error => {
-            console.error('Error creating policy:', error.response.data);
-        });
+        },
+        data: policy_payload
+    });
+    console.log(response.data);
+    return response.data;
+
 }
 
 const SyncVaultRole = async (appname) => {
     const roleurl = `${VAULT_ADDR}/v1/auth/kubernetes/role/${appname}`;
-    const vault_config = {
-        headers: {
-            'X-Vault-Token': VAULT_TOKEN,
-            'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
-            'Content-Type': 'application/json',
-        }
-    };
+
     var role_payload = {
         "bound_service_account_names": appname,
         "bound_service_account_namespaces": "dev",
@@ -97,25 +91,39 @@ const SyncVaultRole = async (appname) => {
         "max_ttl": 18000
     }
 
-    axios.post(roleurl, role_payload, vault_config)
-        .then(response => {
-            console.log('Policy created:', response.data);
-        })
-        .catch(error => {
-            console.error('Error creating policy:', error.response.data);
-        });
+    const response = await axios({
+        method: 'post',
+        url: policyurl,
+        headers: {
+            'X-Vault-Token': VAULT_TOKEN,
+            'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
+            'Content-Type': 'application/json',
+        },
+        data: role_payload
+    });
+
+    console.log(response.data);
+    return response.data;
 }
 
 const OnboardAppToVault = async () => {
-
     var appname = await fetchConfigMap();
     console.log(appname.apps);
+
     await SyncVaultPolicy(appname)
 
     await SyncVaultRole(appname)
 
     return true;
 }
+
 console.log("OnboardAppToVault Started");
-OnboardAppToVault().then(res => console.log(res)).catch(err => console.log(err));
-console.log("Ending Job Successfull");
+OnboardAppToVault()
+    .then(res => {
+        console.log(res);
+        console.log("Ending Job Successfull");
+    })
+    .catch(err => {
+        console.log(err);
+        console.log("Ending Job with Error");
+    });

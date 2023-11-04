@@ -72,7 +72,7 @@ const SyncVaultPolicy = async (appname) => {
     const policy_payload = {
         "policy": "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
     }
-    axios.post(policyurl, policy_payload, config)
+    axios.post(policyurl, policy_payload, vault_config)
         .then(response => {
             console.log('Policy created:', response.data);
         })
@@ -83,7 +83,13 @@ const SyncVaultPolicy = async (appname) => {
 
 const SyncVaultRole = async (appname) => {
     const roleurl = `${VAULT_ADDR}/v1/auth/kubernetes/role/${appname}`;
-
+    const vault_config = {
+        headers: {
+            'X-Vault-Token': VAULT_TOKEN,
+            'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
+            'Content-Type': 'application/json',
+        }
+    };
     var role_payload = {
         "bound_service_account_names": appname,
         "bound_service_account_namespaces": "dev",
@@ -91,7 +97,7 @@ const SyncVaultRole = async (appname) => {
         "max_ttl": 18000
     }
 
-    axios.post(roleurl, role_payload, config)
+    axios.post(roleurl, role_payload, vault_config)
         .then(response => {
             console.log('Policy created:', response.data);
         })
@@ -108,9 +114,8 @@ const OnboardAppToVault = async () => {
 
     await SyncVaultRole(appname)
 
-
+    return true;
 }
-
+console.log("OnboardAppToVault Started");
+OnboardAppToVault().then(res => console.log(res)).catch(err => console.log(err));
 console.log("Ending Job Successfull");
-
-OnboardAppToVault();

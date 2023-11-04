@@ -90,7 +90,7 @@ function OnboardAppToVault(appname) {
     };
 
     const policy_payload = {
-        "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
+        "policy": "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
       }
       
     //   "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n\n# Manage namespaces\npath \"kubeos/dev/*\" {\n   capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}\n}"

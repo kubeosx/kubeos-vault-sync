@@ -110,7 +110,7 @@ const OnboardAppToVault = async () => {
     var appname = await fetchConfigMap();
     console.log(appname.apps);
     var allApps = JSON.parse(appname.apps);
-    allApps.foreach(async (app) => {
+    allApps.forEach(async (app) => {
         await SyncVaultPolicy(app)
 
         await SyncVaultRole(app)

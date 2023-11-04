@@ -1,5 +1,5 @@
 apiVersion: batch/v1
-kind: Job
+kind: CronJob
 metadata:
   name: kubeos-vault-sync
   namespace: vault-backend
@@ -7,25 +7,28 @@ metadata:
     vault.hashicorp.com/agent-inject: 'true'
     vault.hashicorp.com/agent-configmap: 'vault-sync-int-config'
 spec:
+  schedule: "* * * * *"
   # completions: 2
   # parallelism: 1
   # completionMode: Indexed  # required for the feature
   # backoffLimitPerIndex: 1  # maximal number of failures per index
   # maxFailedIndexes: 5      # maximal number of failed indexes before terminating the Job execution
-  template:
+  jobTemplate:
     spec:
-      restartPolicy: Never # required for the feature
-      serviceAccountName: kubeos-vault-sync
-      containers:
-      - name: kubeos-vault-sync
-        image:  rohitrustagi007/kubeos-vault-sync:21
-        env:
-        - name: NAMESPACE
-          value: vault-backend
-        - name: CM_NAME
-          value: vaultrole
-        - name: VAULT_TOKEN
-          value: hvs.UnboJQkUw6dM5gLZ2N6ien5y
-        - name: VAULT_ADDR
-          value: http://vault.vault-backend.svc.cluster.local:8200
-        
+      template:
+        spec:
+          restartPolicy: Never # required for the feature
+          serviceAccountName: kubeos-vault-sync
+          containers:
+          - name: kubeos-vault-sync
+            image:  rohitrustagi007/kubeos-vault-sync:22
+            env:
+            - name: NAMESPACE
+              value: vault-backend
+            - name: CM_NAME
+              value: vaultrole
+            - name: VAULT_TOKEN
+              value: hvs.UnboJQkUw6dM5gLZ2N6ien5y
+            - name: VAULT_ADDR
+              value: http://vault.vault-backend.svc.cluster.local:8200
+            

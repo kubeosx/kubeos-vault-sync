@@ -14,9 +14,9 @@ metadata:
   namespace: vault-backend
   name: configmap-reader
 rules:
-- apiGroups: [""] # "" indicates the core API group
-  resources: ["pods","configmaps"]
-  verbs: ["get", "watch", "list"]
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["pods", "configmaps"]
+    verbs: ["get", "watch", "list"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -25,10 +25,34 @@ metadata:
   name: configmap-reader-binding
   namespace: vault-backend
 subjects:
-- kind: ServiceAccount
-  name: kubeos-vault-sync
-  namespace: vault-backend
+  - kind: ServiceAccount
+    name: kubeos-vault-sync
+    namespace: vault-backend
 roleRef:
   kind: Role
+  name: configmap-reader
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: configmap-reader
+rules:
+  - apiGroups: [""]
+    resources: ["secrets", "pods", "configmaps"]
+    verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+# This cluster role binding allows anyone in the "manager" group to read secrets in any namespace.
+kind: ClusterRoleBinding
+metadata:
+  name: read-secrets-global
+subjects:
+- kind: ServiceAccount
+  name: kubeos-vault-sync # Name is case sensitive
+  namespace: vault-backend
+roleRef:
+  kind: ClusterRole
   name: configmap-reader
   apiGroup: rbac.authorization.k8s.io

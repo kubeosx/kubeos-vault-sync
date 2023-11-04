@@ -1,10 +1,9 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: vaultrole
+  name: four-api-vault-config
   namespace: vault-backend
+  labels:
+    kubeos.io/vault-cm: vault-config
 data:
-  apps: |
-    [
-      "four-api"
-    ]
+  app: "four-api"

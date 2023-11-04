@@ -20,6 +20,27 @@ const api = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/confi
 
 console.log(token);
 
+// returns array of config maps  sample : [{"metadata":{},"data": {"app": "four-api"}}]
+const fetchFilteredConfigMap = async () => {
+    try {
+        const filterurl = `https://kubernetes.default.svc/api/v1/namespaces/${namespace}/configmaps?labelSelector=kubeos.io/vault-cm=vault-config`
+        const response = await axios({
+            httpsAgent: agent,
+            method: 'get',
+            url: filterurl,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response.data);
+
+        return response.data.items;
+    } catch (error) {
+        console.error('Error fetching ConfigMap:', error);
+        return null;
+    }
+};
 
 const fetchConfigMap = async () => {
     try {
@@ -119,8 +140,21 @@ const OnboardAppToVault = async () => {
     return true;
 }
 
-console.log("OnboardAppToVault Started");
-OnboardAppToVault()
+const VaultRolePolicySyncronizer = async () => {
+    var all_config_maps_filtered = await fetchFilteredConfigMap();
+    console.log(all_config_maps_filtered);
+    var allCM = JSON.parse(all_config_maps_filtered);
+    allCM.forEach(async (cm) => {
+        await SyncVaultPolicy(cm.app)
+
+        await SyncVaultRole(cm.app)
+    });
+    
+    return true;
+}
+
+console.log("VaultRolePolicySyncronizer Started");
+VaultRolePolicySyncronizer()
     .then(res => {
         console.log(res);
         console.log("Ending Job Successfull");

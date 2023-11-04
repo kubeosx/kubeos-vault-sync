@@ -34,7 +34,7 @@ const fetchConfigMap = async () => {
         });
         console.log(response.data);
 
-        return response.data;
+        return response.data.data;
     } catch (error) {
         console.error('Error fetching ConfigMap:', error);
         return null;
@@ -72,7 +72,7 @@ const SyncVaultPolicy = async (appname) => {
     const policy_payload = {
         "policy": "path \"kubeos/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
     }
-    axios.post(url, policy_payload, config)
+    axios.post(policyurl, policy_payload, config)
         .then(response => {
             console.log('Policy created:', response.data);
         })
@@ -113,4 +113,4 @@ const OnboardAppToVault = async () => {
 
 console.log("Ending Job Successfull");
 
-OnboardAppToVault()
+OnboardAppToVault();

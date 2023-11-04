@@ -4,7 +4,7 @@ metadata:
   name: vaultrole
   namespace: vault-backend
 data:
-  apps.json: |
+  apps: |
     [
       "four-api"
     ]

@@ -93,7 +93,7 @@ const SyncVaultRole = async (appname) => {
 
     const response = await axios({
         method: 'post',
-        url: policyurl,
+        url: roleurl,
         headers: {
             'X-Vault-Token': VAULT_TOKEN,
             'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
@@ -109,11 +109,13 @@ const SyncVaultRole = async (appname) => {
 const OnboardAppToVault = async () => {
     var appname = await fetchConfigMap();
     console.log(appname.apps);
+    var allApps = JSON.parse(appname.apps);
+    allApps.foreach(async (app) => {
+        await SyncVaultPolicy(app)
 
-    await SyncVaultPolicy(appname)
-
-    await SyncVaultRole(appname)
-
+        await SyncVaultRole(app)
+    });
+    
     return true;
 }
 

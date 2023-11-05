@@ -132,16 +132,36 @@ const createDummySecret = async (appname) => {
     const roleurl = `${VAULT_ADDR}/v1/kubeos/data/dev/${appname}`;
 
     var payload = { "data": { "password": "my-long-password" } };
-    
+
     const response = await axios({
         method: 'post',
         url: roleurl,
         headers: {
             'X-Vault-Token': VAULT_TOKEN,
-             // 'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
+            // 'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
             'Content-Type': 'application/json',
         },
         data: payload
+    });
+
+    console.log(response.data);
+    return response.data;
+}
+
+
+const DummySecretExists = async (appname) => {
+    const roleurl = `${VAULT_ADDR}/v1/kubeos/data/dev/${appname}`;
+
+    var payload = { "data": { "password": "my-long-password" } };
+
+    const response = await axios({
+        method: 'get',
+        url: roleurl,
+        headers: {
+            'X-Vault-Token': VAULT_TOKEN,
+            // 'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
+            'Content-Type': 'application/json',
+        }
     });
 
     console.log(response.data);
@@ -164,10 +184,14 @@ const OnboardAppToVault = async () => {
 const VaultRolePolicySyncronizer = async () => {
     var all_config_maps_filtered = await fetchFilteredConfigMap();
     console.log(all_config_maps_filtered);
+    
     all_config_maps_filtered.forEach(async (cm) => {
         await SyncVaultPolicy(cm.data.app)
         await SyncVaultRole(cm.data.app)
-        await createDummySecret(cm.data.app)
+
+        var dummy_secret = await DummySecretExists(cm.data.app);
+        if (dummy_secret == null)
+            await createDummySecret(cm.data.app)
     });
 
     return true;

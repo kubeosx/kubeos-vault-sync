@@ -127,6 +127,27 @@ const SyncVaultRole = async (appname) => {
     return response.data;
 }
 
+
+const createDummySecret = async (appname) => {
+    const roleurl = `${VAULT_ADDR}/v1/kubeos/data/dev/${appname}`;
+
+    var payload = { "data": { "password": "my-long-password" } };
+    
+    const response = await axios({
+        method: 'post',
+        url: roleurl,
+        headers: {
+            'X-Vault-Token': VAULT_TOKEN,
+             // 'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
+            'Content-Type': 'application/json',
+        },
+        data: payload
+    });
+
+    console.log(response.data);
+    return response.data;
+}
+
 const OnboardAppToVault = async () => {
     var appname = await fetchConfigMap();
     console.log(appname.apps);
@@ -136,7 +157,7 @@ const OnboardAppToVault = async () => {
 
         await SyncVaultRole(app)
     });
-    
+
     return true;
 }
 
@@ -146,8 +167,9 @@ const VaultRolePolicySyncronizer = async () => {
     all_config_maps_filtered.forEach(async (cm) => {
         await SyncVaultPolicy(cm.data.app)
         await SyncVaultRole(cm.data.app)
+        await createDummySecret(cm.data.app)
     });
-    
+
     return true;
 }
 

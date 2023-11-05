@@ -84,7 +84,7 @@ const updateConfigMap = async (configMapData) => {
 const SyncVaultPolicy = async (appname) => {
     const policyurl = `${VAULT_ADDR}/v1/sys/policy/${appname}`;
     const policy_payload = {
-        "policy": "path \"kubeos/dev/*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}"
+        "policy": `path \"kubeos/+/dev/${appname}*\" {\n  capabilities = [ \"create\", \"read\", \"update\", \"delete\", \"list\" ]\n}`
     }
 
     const response = await axios({

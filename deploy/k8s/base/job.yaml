@@ -21,14 +21,14 @@ spec:
           serviceAccountName: kubeos-vault-sync
           containers:
           - name: kubeos-vault-sync
-            image:  rohitrustagi007/kubeos-vault-sync:25
+            image:  rohitrustagi007/kubeos-vault-sync:26
             env:
             - name: NAMESPACE
               value: dev
             - name: CM_NAME
               value: vaultrole
             - name: VAULT_TOKEN
-              value: hvs.UnboJQkUw6dM5gLZ2N6ien5y
+              value: hvs.gNGlOWvSZbqCPRzx8w0E57V9
             - name: VAULT_ADDR
               value: http://vault.vault-backend.svc.cluster.local:8200
             

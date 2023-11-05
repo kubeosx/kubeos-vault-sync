@@ -10,7 +10,7 @@ const VAULT_ADDR = process.env.VAULT_ADDR;;
 
 console.log("Started Job");
 
-KUBERNETES
+
 const agent = new https.Agent({
     ca: fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/ca.crt')
 });

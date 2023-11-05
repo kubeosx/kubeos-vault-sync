@@ -10,7 +10,7 @@ const VAULT_ADDR = process.env.VAULT_ADDR;;
 
 console.log("Started Job");
 
-// KUBERNETES
+KUBERNETES
 const agent = new https.Agent({
     ca: fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/ca.crt')
 });
@@ -150,22 +150,28 @@ const createDummySecret = async (appname) => {
 
 
 const DummySecretExists = async (appname) => {
-    const roleurl = `${VAULT_ADDR}/v1/kubeos/data/dev/${appname}`;
-
-    var payload = { "data": { "password": "my-long-password" } };
-
-    const response = await axios({
-        method: 'get',
-        url: roleurl,
-        headers: {
-            'X-Vault-Token': VAULT_TOKEN,
-            // 'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
-            'Content-Type': 'application/json',
+    try {
+        const url = `${VAULT_ADDR}/v1/kubeos/data/dev/${appname}`;
+        const response = await axios({
+            method: 'get',
+            url: url,
+            headers: {
+                'X-Vault-Token': VAULT_TOKEN,
+                'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
+                'Content-Type': 'application/json',
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } 
+    catch (error) {
+        if (error.response && error.response.status === 404) {
+            return null;
+        } else {
+            console.error('Error:', error);
         }
-    });
+    }
 
-    console.log(response.data);
-    return response.data;
 }
 
 const OnboardAppToVault = async () => {
@@ -184,7 +190,7 @@ const OnboardAppToVault = async () => {
 const VaultRolePolicySyncronizer = async () => {
     var all_config_maps_filtered = await fetchFilteredConfigMap();
     console.log(all_config_maps_filtered);
-    
+
     all_config_maps_filtered.forEach(async (cm) => {
         await SyncVaultPolicy(cm.data.app)
         await SyncVaultRole(cm.data.app)
@@ -207,3 +213,41 @@ VaultRolePolicySyncronizer()
         console.log(err);
         console.log("Ending Job with Error");
     });
+
+
+
+// // ### THIS FOR DEV PURPOSES ONLY ###
+// const DummySecretExists = async () => {
+//     const roleurl = `http://127.0.0.1:8200/v1/kubeos/data/dev/six-api`;
+//     try {
+//         const response = await axios({
+//             method: 'get',
+//             url: roleurl,
+//             headers: {
+//                 'X-Vault-Token': `hvs.gNGlOWvSZbqCPRzx8w0E57V9`,
+//                 // 'X-Vault-Namespace': 'admin', // Adjust the namespace accordingly
+//                 'Content-Type': 'application/json',
+//             }
+//         });
+    
+//         console.log(response.data);
+//         return response.data;
+//     } catch (error) {
+//         if (error.response && error.response.status === 404) {
+//             return null;
+//         } else {
+//             console.error('Error:', error);
+//         }
+//     }
+  
+// }
+
+// DummySecretExists()
+//     .then(res => {
+//         console.log(res);
+//         console.log("Ending Job Successfull");
+//     })
+//     .catch(err => {
+//         console.log(err);
+//         console.log("Ending Job with Error");
+//     });

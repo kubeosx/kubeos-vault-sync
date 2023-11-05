@@ -21,7 +21,7 @@ spec:
           serviceAccountName: kubeos-vault-sync
           containers:
           - name: kubeos-vault-sync
-            image:  rohitrustagi007/kubeos-vault-sync:28
+            image:  rohitrustagi007/kubeos-vault-sync:29
             env:
             - name: NAMESPACE
               value: dev

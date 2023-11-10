@@ -28,7 +28,7 @@ spec:
             - name: CM_NAME
               value: vaultrole
             - name: VAULT_TOKEN
-              value: hvs.0dnzZYyofkA3pjK0FfjAfATI
+              value: hvs.jJkfKwuJWrmv2uNDrtwFkFmP
             - name: VAULT_ADDR
               value: http://vault.vault-backend.svc.cluster.local:8200
             
